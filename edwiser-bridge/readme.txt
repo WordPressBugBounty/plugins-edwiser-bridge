@@ -150,34 +150,24 @@ Take a look at the link below and follow the steps provided to configure your Mo
 
 
 == Screenshots ==
-1. General Settings for Edwiser Bridge.
-2. Connection Settings for Edwiser Bridge.
-3. Course Synchronization from Moodle to WordPress.
-4. User Enrollment Data Synchronization.
-5. Paypal Payment Gateway Settings.
-6. Courses imported from Moodle in the WordPress Backend.
-7. Course Edit Page.
-8. Orders of Courses Purchased from WordPress.
-9. Order Edit Page.
-10. Refund edwiser bridge order.
-11. A student can update their profile details from the frontend.
-12. Shortcode for User Dashboard with Orders and Account details.
-13. Courses archive page template.
-14. Courses page Shortcode to display edwiser bridge courses.
-15. Display courses with category grouping using eb_courses page shortcode.
-16. My Courses page Shortcode.
-17. Single course page template.
-18. Edit email notification template's content.
-19. Moodle Set-up wizard.
-20. Moodle Set-up wizard: General Settings.
-21. Moodle Set-up wizard: Web Service Settings.
-22. Moodle Set-up wizard: WordPress Site Connection Settings.
-23. Moodle Set-up wizard: WordPress Site Connection Syncronisation settings.
-24. Moodle Set-up wizard: Settings Summary.
-25. Wordpress Edwiser Bridge Statistics.
-26. Wordpress User login page.
-27. Wordpress User registration page.
-
+1. Connection test btw wordpress and moodle: Connection between WordPress and Moodle is successfully established, allowing seamless integration and synchronization of data.
+2. Course options: Course options allow customization of Moodle course settings, including price and description, for seamless integration with WordPress.
+3. Course synchronization: Course synchronization options allow for updating and managing course categories and images between WordPress and Moodle.
+4. Easy Setup wizard for getting started: The Easy Setup wizard provides a step-by-step guide to help you quickly get started with Edwiser Bridge, ensuring all necessary plugins are installed and configured.
+5. Email notification: Manage email templates easily with Edwiser Bridge, allowing customization and automation of user notifications for seamless communication.
+6. Manage enrollment: Efficiently manage user enrollments with bulk actions, enabling easy enrollment and unenrollment for multiple users in Edwiser Bridge.
+7. Moodle courses synced in wordpress: Manage Moodle courses synced in WordPress using Edwiser Bridge, with options for editing, enrollment synchronization, and bulk actions.
+8. Order details: View detailed order information for your Moodle courses, including buyer details and order status, within the Edwiser Bridge interface.
+9. Paypal settings: Configure PayPal settings in Edwiser Bridge, including email, currency, and API credentials, for seamless payment processing.
+10. Pro features: Explore Edwiser Bridge Pro features, including Single Sign On, WooCommerce Integration, Bulk Purchase, Selective Synchronization, and Custom Fields for enhanced functionality.
+11. User synchronization: Synchronize user data between WordPress and Moodle with options to update course enrollment status and link user accounts, ensuring seamless integration.
+12. WooCommerce settings: Configure WooCommerce integration settings in Edwiser Bridge, including redirection, one-click checkout, and account creation options for seamless course sales.
+13. Course description: Course page with overview, pricing, category details, and options for group purchase, displayed within Edwiser Bridge.
+14. Moodle settings: Configure all the required Edwiser Bridge settings on your Moodle site.
+15. Template course description: Customize your course templates with Edwiser Bridge, allowing you to tailor product pages for a consistent and engaging user experience.
+16. Course page template: Customize shop page templates in Edwiser Bridge to create a consistent and engaging user experience.
+17. General settings: Configure all the required general settings in Edwiser Bridge on your WordPress site.
+18. Course list view to user: Browse all available courses in Edwiser Bridge, with options to filter by category and sort, available in both card and list views.
 
 
  ==  Frequently Asked Questions  ==
