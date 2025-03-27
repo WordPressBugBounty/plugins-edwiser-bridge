@@ -291,6 +291,5 @@ RewriteRule . /index.php [L]
 				}
 			}
 		}
-
 	}
 }

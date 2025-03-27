@@ -456,8 +456,6 @@ class Eb_User_Manager {
 						);
 					} else {
 						$uc_status = $user_id;
-						// update firstname, lastname.
-						// $uc_status = $this->update_user_on_moodle($user_id, $firstname, $lastname, $wp_user_data, $username, $email, $user_p);
 					}
 				}
 			}
@@ -517,6 +515,7 @@ class Eb_User_Manager {
 		);
 		$this->update_user_on_moodle( $user_id, $firstname, $lastname, $wp_user_data, $username, $email, $user_p );
 	}
+
 	public function update_user_on_moodle( $user_id, $firstname, $lastname, $wp_user_data, $username, $email, $user_p ) {
 		update_user_meta( $user_id, 'first_name', $firstname );
 		update_user_meta( $user_id, 'last_name', $lastname );
@@ -1109,7 +1108,7 @@ class Eb_User_Manager {
 	/**
 	 * Change moodle password when WordPress password change event occurs.
 	 * Modified - update profile details from wp admin panel.
-	 *
+	 * 
 	 * @since 1.0.0
 	 *
 	 * @param int $user_id user id of the profile being updated.
@@ -1156,7 +1155,10 @@ class Eb_User_Manager {
 		// check if the page is updated from wp-admin profile page.
 		if ( isset( $_POST['from'] ) && 'profile' === $_POST['from'] ) {
 			$moodle_user_id = get_user_meta( $user_id, 'moodle_user_id', true ); // get moodle user id.
-
+			if ( ! is_numeric( $moodle_user_id ) ) {
+				edwiser_bridge_instance()->logger()->add( 'user', 'A moodle user id is not associated.... Exiting!!!' ); // add user log.
+				return;
+			}
 			$user       = get_user_by( 'id', $user_id );
 			$first_name = $user->first_name;
 			$last_name  = $user->last_name;

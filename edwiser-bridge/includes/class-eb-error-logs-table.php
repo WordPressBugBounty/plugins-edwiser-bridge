@@ -83,7 +83,7 @@ if ( ! class_exists( '\app\wisdmlabs\edwiserBridge\Eb_Error_Logs_Table' ) ) {
 			if ( ! is_array( $logs ) ) {
 				$logs = array();
 			}
-			$tbl_records = array();
+			$tbl_records   = array();
 			$total_records = count( $logs );
 
 			foreach ( array_reverse( $logs ) as $key => $log ) {

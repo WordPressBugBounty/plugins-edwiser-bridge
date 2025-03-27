@@ -214,18 +214,18 @@ if ( ! class_exists( 'Eb_Settings_Connection' ) ) :
 						),
 
 						array(
-							'title'    		   => '',
-							'desc'     		   => '',
-							'id'       		   => 'eb_test_connection_button',
-							'default'  		   => __( 'Test Connection', 'edwiser-bridge' ),
-							'type'     		   => 'button',
-							'desc_tip' 		   => false,
-							'class'    		   => 'button secondary',
-							'parent_row_class' => 'inline'
+							'title'   			=> '',
+							'desc'     			=> '',
+							'id'       			=> 'eb_test_connection_button',
+							'default'  			=> __( 'Test Connection', 'edwiser-bridge' ),
+							'type'     			=> 'button',
+							'desc_tip' 			=> false,
+							'class'    			=> 'button secondary',
+							'parent_row_class' 	=> 'inline',
 						),
 						array(
 							'html' => '<th></th><td> <div class="eb_test_connection_response"></div> </td>',
-							'type' => 'cust_html',
+								'type' => 'cust_html',
 						),
 						array(
 							'html' => '<th></th><td><hr style="margin-bottom: 30px;" /><div style="font-size: 16px;">' . esc_html__( 'Are you are still facing issues related to connection?', 'edwiser-bridge' ) . '</div></td>',

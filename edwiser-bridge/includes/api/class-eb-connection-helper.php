@@ -151,7 +151,7 @@ class Eb_Connection_Helper {
 		// function to check if webservice token is properly set.
 
 		// new test connection api.
-		$webservice_function = 'eb_test_connection';
+		$webservice_function = 'auth_edwiserbridge_test_connection';
 
 		$request_url               = $url . '/webservice/rest/server.php?wstoken=';
 		$request_url              .= $token . '&wsfunction=';
@@ -171,7 +171,7 @@ class Eb_Connection_Helper {
 			'wp_token'        => $token,
 		);
 		$response             = wp_safe_remote_post( $request_url, $request_args );
-		
+
 		if ( is_wp_error( $response ) ) {
 			$success          = 0;
 			$plain_txt_msg    = $response->get_error_message();
@@ -280,6 +280,7 @@ class Eb_Connection_Helper {
 
 		return $response;
 	}
+
 	public function connection_test_status( $url, $token, $text_response = 0 ) {
 		$success          = 1;
 		$response_message = 'success';
@@ -287,7 +288,7 @@ class Eb_Connection_Helper {
 		// function to check if webservice token is properly set.
 
 		// new test connection api.
-		$webservice_function = 'eb_test_connection';
+		$webservice_function = 'auth_edwiserbridge_test_connection';
 
 		$request_url               = $url . '/webservice/rest/server.php?wstoken=';
 		$request_url              .= $token . '&wsfunction=';
@@ -322,7 +323,7 @@ class Eb_Connection_Helper {
 		// function to check if webservice token is properly set.
 
 		// new test connection api.
-		$webservice_function = 'eb_test_connection';
+		$webservice_function = 'auth_edwiserbridge_test_connection';
 
 		$request_url               = $url . '/webservice/rest/server.php?wstoken=';
 		$request_url              .= $token . '&wsfunction=';
@@ -345,8 +346,6 @@ class Eb_Connection_Helper {
 		$response             = wp_safe_remote_post( $request_url, $request_args );
 		return $response;
 	}
-
-
 
 
 	/**
@@ -450,7 +449,7 @@ class Eb_Connection_Helper {
 	                                </div>
 									<div>
 	                                	<div>' . sprintf( esc_html__( "Click %s Troubleshoot %s button to get more details.", "edwiser-bridge" ), '<strong>', '</strong>' ) . '</div>
-	                                </div>
+									</div>
 	                            </div>
 
 	                            <div class="eb_admin_templ_dismiss_notice_message">

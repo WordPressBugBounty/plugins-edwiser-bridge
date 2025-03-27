@@ -37,12 +37,11 @@ class Eb_Logger {
 	private $version;
 
 	/**
-	 * [$_handles description]
-	 * 
+	 * Handles.
+	 *
 	 * @var array
 	 */
 	private $_handles = array();
-
 	/**
 	 * Instance.
 	 *

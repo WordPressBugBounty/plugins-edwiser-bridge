@@ -49,7 +49,8 @@
     padding-bottom: 15px;
 }
 
-.eb_test_connection_log,.autofix_custom_message{
+.eb_test_connection_log,
+.autofix_custom_message{
     display: none;
     border: 1px solid #d6d6d6;
     padding: 10px 10px 10px 20px;
@@ -556,7 +557,8 @@ a.browse-all:hover {
 
 /* extensions page css end */
 
-.response-box.custom-css, .linkresponse-box.custom-css {
+.response-box.custom-css,
+.linkresponse-box.custom-css {
   position: absolute;
   width: 500px;
   top: 4em;
@@ -2362,11 +2364,12 @@ input:checked + .eb-pro-checkbox-slider:before {
   border-radius: 50%;
   margin-bottom: 5px;
 }
-.eb-heading-inline{
+.eb-heading-inline {
   display: inline-block;
   margin-right: 5px;
 }
-.eb-page-title-action{
+
+.eb-page-title-action {
   display: inline-block;
   position: relative;
   box-sizing: border-box;
@@ -2386,35 +2389,43 @@ input:checked + .eb-pro-checkbox-slider:before {
   padding: 0 10px;
   min-height: 30px;
   -webkit-appearance: none;
+  appearance: none;
 }
 
-.eb-create-new-enrollment-form{
+.eb-create-new-enrollment-form {
   display: none;
 }
-.eb-enroll-form-field{
+
+.eb-enroll-form-field {
   display: flex;
   margin-bottom: 30px;
 }
-.eb-enroll-form-field label{
+
+.eb-enroll-form-field label {
   width: 200px;
   font-weight: 500;
 }
-.eb-enroll-form-field > span{
+
+.eb-enroll-form-field>span {
   width: 400px !important;
   scroll-behavior: auto;
 }
-.eb-enroll-form-field-course{
+
+.eb-enroll-form-field-course {
   display: flex;
   margin-bottom: 30px;
 }
-.eb-enroll-form-field-course label{
+
+.eb-enroll-form-field-course label {
   width: 200px;
   font-weight: 500;
 }
-.eb-enroll-form-field-course > span{
+
+.eb-enroll-form-field-course>span {
   width: 400px !important;
 }
-.eb-enroll-form-field-course input{
+
+.eb-enroll-form-field-course input {
   width: 400px !important;
 }
 
@@ -2423,9 +2434,10 @@ input:checked + .eb-pro-checkbox-slider:before {
   overflow-y: scroll;
   padding: 5px 10px;
 }
+
 .eb-enroll-form-field-course .select2-container .select2-selection__choice {
   margin-left: 1px;
-} 
+}
 
 
 /* media queries */

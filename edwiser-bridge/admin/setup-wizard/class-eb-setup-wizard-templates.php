@@ -576,6 +576,7 @@ class Eb_Setup_Wizard_Templates {
 					<!-- <button class='eb_setup_sec_btn' data-step='<?php echo wp_kses( $step, $allowed_tags ); ?>' data-next-step='<?php echo wp_kses( $next_step, $allowed_tags ); ?>' data-is-next-sub-step='<?php echo wp_kses( $is_next_sub_step, $allowed_tags ); ?>'> <?php esc_html_e( 'Back', 'edwiser-bridge' ); ?> </button> -->
 					<button class='eb_setup_btn eb_setup_test_connection_btn <?php echo esc_attr( $disbaled ); ?>' data-step='<?php echo wp_kses( $step, $allowed_tags ); ?>' data-next-step='<?php echo wp_kses( $next_step, $allowed_tags ); ?>' data-is-next-sub-step='<?php echo wp_kses( $is_next_sub_step, $allowed_tags ); ?>' <?php echo esc_attr( $disbaled ); ?>> <?php esc_html_e( 'Test connection', 'edwiser-bridge' ); ?> </button>
 					<button class='eb_setup_btn eb_setup_save_and_continue eb_setup_test_connection_cont_btn' data-step='<?php echo wp_kses( $step, $allowed_tags ); ?>' data-next-step='<?php echo wp_kses( $next_step, $allowed_tags ); ?>' data-is-next-sub-step='<?php echo wp_kses( $is_next_sub_step, $allowed_tags ); ?>'> <?php esc_html_e( 'Continue the setup', 'edwiser-bridge' ); ?> </button>
+
 				</div>
 				<div class='eb_diagnostics_wrap'>
 					<ul class="run-diagnostics-start"></ul>
@@ -1158,8 +1159,8 @@ class Eb_Setup_Wizard_Templates {
 		$prev_step        = $setup_functions->get_prev_step( $step );
 		$prev_url         = get_site_url() . '/wp-admin/?page=eb-setup-wizard&current_step=' . $prev_step;
 
-		$module_data 		 = get_option( 'eb_pro_modules_data' );
-		$license_module_data = maybe_unserialize( get_option( 'edd_edwiser_bridge_pro_license_addon_data' ) ); 
+		$module_data 	  	 = get_option( 'eb_pro_modules_data' );
+		$license_module_data = maybe_unserialize( get_option( 'edd_edwiser_bridge_pro_license_addon_data' ) );
 
 		$modules_data = array(
 			'selective_sync'  => isset( $module_data['selective_sync'] ) ? $module_data['selective_sync'] : 'deactive',
@@ -1189,7 +1190,6 @@ class Eb_Setup_Wizard_Templates {
 			$modules_data['custom_fields'] = 'deactive';
 			$disabled_module['custom_fields'] = 'disabled';
 		}
-
 
 		if ( $ajax ) {
 			ob_start();

@@ -163,7 +163,7 @@ if ( 1 === filter_input( INPUT_GET, 'eb_user_email_verification', FILTER_VALIDAT
 					<?php
 				}
 				?>
-				<!-- Spam Trap 
+				<!-- Spam Trap -->
 				<div style="<?php //echo ( is_rtl() ) ? 'right' : 'left'; ?>: -999em; position: absolute;">
 					<label for="trap">
 						<?php //esc_html_e( 'Anti-spam', 'edwiser-bridge' ); ?>

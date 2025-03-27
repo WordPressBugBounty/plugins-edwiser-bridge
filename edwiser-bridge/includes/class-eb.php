@@ -572,6 +572,7 @@ class EdwiserBridge {
 
 		// hook to delete older log files
 		$this->loader->eb_add_action( 'admin_init', $plugin_admin, 'delete_old_logs' );
+
 		/**
 		 * Add action to add the meta boxes in backend for the order
 		 */
@@ -805,7 +806,6 @@ class EdwiserBridge {
 			$admin_settings_init,
 			'fix_valid_json_response'
 		);
-
 		// error log ajax handlers.
 		$this->loader->eb_add_action(
 			'wp_ajax_wdm_eb_get_log_data',
@@ -987,7 +987,6 @@ class EdwiserBridge {
 		 * update course enrollment table appropriately by deleting records for user being deleted.
 		 */
 		$this->loader->eb_add_action( 'delete_user', $this->user_manager(), 'delete_enrollment_records_on_user_deletion' );
-
 		// Delete user
 		$this->loader->eb_add_action( 'delete_user', $this->user_manager(), 'delete_user_from_moodle' );
 
