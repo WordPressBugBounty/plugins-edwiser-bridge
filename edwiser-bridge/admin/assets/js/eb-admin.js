@@ -783,7 +783,7 @@
             var token = $('#eb_access_token').val();
             var $this = $(this);
             var checks = ['json_valid', 'token_validation', 'server_blocking_check', 'permalink_setting',
-                'get_endpoint', 'post_endpoint'];
+                'get_endpoint', 'post_endpoint', 'enroll_dummy_user'];
             jQuery(this).attr('disabled', 'disabled');
             start_diagnostics(url, token, $this, checks);
         });
@@ -800,13 +800,16 @@
                     if (check == 'token_validation') {
                         jQuery('.run-diagnostics-start img.' + check + '_loader').attr('src', eb_admin_js_object.plugin_url + 'images/error.png');
                         jQuery('.run-diagnostics-start img.' + check + '_loader + .diagnostic_check_name').after('<span class="auto_fix_issue eb_' + check + '_fix">' + eb_admin_js_object.eb_fix_now + '</span><div class="autofix_custom_message"></div>');
+                    } else if (check == 'enroll_dummy_user') {
+                        jQuery('.run-diagnostics-start img.' + check + '_loader').attr('src', eb_admin_js_object.plugin_url + 'images/error.png');
+                        jQuery('.run-diagnostics-start img.' + check + '_loader + .diagnostic_check_name').after(window.enroll_message);
                     } else {
                         jQuery('.run-diagnostics-start img.' + check + '_loader').attr('src', eb_admin_js_object.plugin_url + 'images/error.png');
                         jQuery('.run-diagnostics-start img.' + check + '_loader + .diagnostic_check_name').after('<span class="auto_fix_issue eb_' + check + '_fix">' + eb_admin_js_object.get_more_details + '</span><div class="autofix_custom_message"></div>');
                     }
                 }
                 completed++;
-                if (completed == 6) {// checks count
+                if (completed == 7) {// checks count
                     jQuery('.run-diagnostics-start h2').html(eb_admin_js_object.diagnostics_completed);
                     jQuery('#eb_diagnose_issues_button').removeAttr('disabled');
                 }
@@ -832,6 +835,7 @@
                         'url': url.trim(),
                         'token': token,
                         '_wpnonce_field': eb_admin_js_object.nonce,
+                        'is_diagnostic_run': true,
                     },
                     success: function (response) {
                         if ('json_valid' == check) {
@@ -842,6 +846,17 @@
                         }
                         if (isValidJsonString(response) && typeof response == "string") {
                             response = JSON.parse(response);
+                        }
+                        if ('enroll_dummy_user' == check) {
+                            if (response.status == 'success') {
+                                resolve(true);
+                            } else {
+                                if (response.html) {
+                                    response.enroll_message = response.enroll_message + response.html;
+                                }
+                                window.enroll_message = response.enroll_message;
+                                resolve(false);
+                            }
                         }
                         if (response.data.correct) {
                             if ('server_blocking_check' == check) {
@@ -1195,6 +1210,9 @@
         $("#course_expirey").change(function () {
             if ($(this).prop("checked") == true) {
                 $('#eb_course_num_days_course_access').show();
+                if ($('#num_days_course_access').val() == '' ) {
+                    $('#num_days_course_access').val(30);
+                }
                 $('#eb_course_course_expiry_action').show();
             } else {
                 $('#eb_course_course_expiry_action').hide();
@@ -2050,6 +2068,52 @@
         });
     });
     /*JS for Order page end*/
+
+// --- Template Modal ---
+  jQuery(document).ready(function ($) {
+    // Close modal
+    $('.eb__modal-close').on('click', function () {
+      $('.eb__modal-overlay').fadeOut(300);
+
+      var container = $(this).closest('.eb__modal-container');
+      var modalType = container.hasClass('pro') ? 'pro' : 'free';
+
+      // Mark as viewed via AJAX
+      $.ajax({
+        url: ebModalData.ajaxurl,
+        type: 'POST',
+        data: {
+          action: 'eb_mark_template_modal_as_viewed',
+          nonce: ebModalData.nonce,
+          modal_type: modalType,
+        },
+      });
+    });
+
+    // Redirect to templates page when clicking the CTA
+    $('.eb__modal-cta').on('click', function (e) {
+      e.preventDefault();
+      $('.eb__modal-overlay').fadeOut(300);
+
+      var container = $(this).closest('.eb__modal-container');
+      var modalType = container.hasClass('pro') ? 'pro' : 'free';
+
+      // Mark as viewed via AJAX
+      $.ajax({
+        url: ebModalData.ajaxurl,
+        type: 'POST',
+        data: {
+          action: 'eb_mark_template_modal_as_viewed',
+          nonce: ebModalData.nonce,
+          modal_type: modalType,
+        },
+        success: function () {
+          // Redirect to templates page
+          window.location.href = ebModalData.templatesUrl;
+        },
+      });
+    });
+  });
 
 
 

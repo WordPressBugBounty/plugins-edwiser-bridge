@@ -358,10 +358,14 @@ class EdwiserBridge {
 		require_once $plugin_path . 'public/shortcodes/class-eb-shortcode-my-courses.php';
 
 		/**
+		 * Register Gutenberg blocks API.
+		 */
+		require_once $plugin_path . 'includes/api/class-eb-blocks-course-api.php';
+
+		/**
 		 * The class responsible for handling frontend forms, specifically login & registration forms.
 		 */
 		require_once $plugin_path . 'public/class-eb-frontend-form-handler.php';
-
 	}
 
 	/**
@@ -569,7 +573,7 @@ class EdwiserBridge {
 		$plugin_admin = new Eb_Admin( $this->get_plugin_name(), $this->get_version() );
 		$this->loader->eb_add_action( 'admin_enqueue_scripts', $plugin_admin, 'admin_enqueue_styles' );
 		$this->loader->eb_add_action( 'admin_enqueue_scripts', $plugin_admin, 'admin_enqueue_scripts' );
-
+		$this->loader->eb_add_action( 'admin_init', '\app\wisdmlabs\edwiserBridge\Eb_Activator', 'create_gutenberg_pages' );
 		// hook to delete older log files
 		$this->loader->eb_add_action( 'admin_init', $plugin_admin, 'delete_old_logs' );
 
@@ -620,17 +624,32 @@ class EdwiserBridge {
 			'eb_admin_update_moodle_plugin_notice'
 		);
 
-		$this->loader->eb_add_action(
-			'admin_init',
-			$admin_notice_handler,
-			'eb_admin_remui_demo_notice_dismiss_handler'
-		);
+		if ( is_plugin_active( 'edwiser-bridge-pro/edwiser-bridge-pro.php' ) ) {
+			$this->loader->eb_add_action(
+				'admin_init',
+				$admin_notice_handler,
+				'eb_admin_remui_demo_notice_dismiss_handler'
+			);
 
-		$this->loader->eb_add_action(
-			'admin_notices',
-			$admin_notice_handler,
-			'eb_admin_remui_demo_notice'
-		);
+			$this->loader->eb_add_action(
+				'admin_notices',
+				$admin_notice_handler,
+				'eb_admin_remui_demo_notice'
+			);
+		} else {
+			$this->loader->eb_add_action(
+				'admin_init',
+				$admin_notice_handler,
+				'eb_admin_upgrade_to_pro_notice_dismiss_handler'
+			);
+
+			$this->loader->eb_add_action(
+				'admin_notices',
+				$admin_notice_handler,
+				'eb_admin_upgrade_to_pro_notice'
+			);
+		}
+
 
 		$this->loader->eb_add_action(
 			'admin_init',
@@ -667,6 +686,10 @@ class EdwiserBridge {
 			$admin_notice_handler,
 			'eb_admin_pro_notice'
 		);
+
+		$this->loader->eb_add_action('admin_init', $admin_notice_handler, 'check_for_template_modal');
+		$this->loader->eb_add_action('admin_init', $admin_notice_handler, 'show_template_modal');
+		$this->loader->eb_add_action('wp_ajax_eb_mark_template_modal_as_viewed', $admin_notice_handler, 'eb_mark_template_modal_as_viewed');
 
 		$hook = 'in_plugin_update_message-edwiser-bridge/edwiser-bridge.php';
 		$this->loader->eb_add_action(
@@ -914,6 +937,12 @@ class EdwiserBridge {
 			$this->enrollment_manager(),
 			'enroll_dummy_user'
 		);
+		
+		$this->loader->eb_add_action(
+			'wp_ajax_eb_enroll_dummy_user',
+			$this->enrollment_manager(),
+			'enroll_dummy_user'
+		);
 	}
 
 	/**
@@ -992,6 +1021,7 @@ class EdwiserBridge {
 
 		$this->loader->eb_add_action( 'eb_before_single_course', $this->user_manager(), 'unenroll_on_course_access_expire' );
 		$this->loader->eb_add_action( 'user_register', $this->user_manager(), 'eb_moodle_user_register', 10, 2);
+		$this->loader->eb_add_filter( 'eb_disable_checkout_user_creation', $this->user_manager(), 'eb_disable_checkout_user_creation', 10, 1 );
 
 		/**
 		 * Email verification hooks.
@@ -1004,7 +1034,6 @@ class EdwiserBridge {
 			$this->loader->eb_add_action( 'authenticate', $this->user_manager(), 'eb_user_authentication_check', 100, 3 );
 			$this->loader->eb_add_action( 'init', $this->user_manager(), 'eb_user_email_verify' );
 		}
-
 	}
 
 	/**
