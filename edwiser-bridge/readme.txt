@@ -3,7 +3,7 @@ Contributors: WisdmLabs
 Tags: wordpress moodle, moodle wordpress, moodle woocommerce, connect moodle with wordpress, sell moodle courses
 Requires at least: 6.0
 Tested up to: 6.8.2
-Stable tag: 4.2.0
+Stable tag: 4.3.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -211,6 +211,9 @@ Also, check our knowledge base for more queries
 
 
  ==  Changelog  ==
+ = 4.3.0 =
+* Feature - Introduced Gutenberg Block templates for the User Account page and the My Courses page.
+
 = 4.2.0 =
 * Feature - Added setting to select Edwiser Gutenberg block template pages.
 		  - We’ve introduced a new Template Selection feature in the Edwiser Bridge settings, allowing you to choose which WordPress pages use Gutenberg blocks for the particular pages.
