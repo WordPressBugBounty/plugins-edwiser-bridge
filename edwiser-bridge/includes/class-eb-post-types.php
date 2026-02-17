@@ -261,7 +261,7 @@ class Eb_Post_Types {
 		if ( 'eb_order' === $args['args']['post_type'] ) {
 			$css_class = 'eb-wdm-order-meta';
 			echo '<strong>';
-			echo esc_html__( 'Order ', 'edwiser-bridge' ) . esc_html( printf( '#%s ', get_the_id() ) ) . esc_html__( 'Details ', 'edwiser-bridge' );
+			echo esc_html( sprintf( __( 'Order #%s Details', 'edwiser-bridge' ), get_the_id() ) );
 			echo '</strong>';
 			echo "<div id='" . esc_html( $args['args']['post_type'] ) . "'_options' class='post-options " . esc_html( $css_class ) . "'>";
 		} else {
@@ -577,7 +577,7 @@ class Eb_Post_Types {
 				break;
 			default:
 				?>
-				<span class="description-label <?php esc_attr( $field_id ); ?>"><img class="help-tip" src="<?php echo esc_html( $eb_plugin_url ); ?>images/question.png" data-tip="<?php echo esc_attr( $field['description'] ); ?>" /></span>
+				<span class="description-label <?php esc_attr( $field_id ); ?>"><img class="help-tip" src="<?php echo esc_url( $eb_plugin_url . 'images/question.png' ); ?>" data-tip="<?php echo esc_attr( $field['description'] ); ?>" /></span>
 				<?php echo isset( $field['note'] ) ? wp_kses( $field['note'], \app\wisdmlabs\edwiserBridge\wdm_eb_sinlge_course_get_allowed_html_tags() ) : ''; ?>
 				<?php
 				break;
@@ -735,7 +735,7 @@ class Eb_Post_Types {
 				'%1$s' . __( 'scheduled for:  ', 'edwiser-bridge' ) . '<strong>' . '%2$s' . '</strong><a href="' . '%3$s' . '" target="_blank">' . __( 'Preview ', 'edwiser-bridge' ) . '%4$s</a>', // @codingStandardsIgnoreLine
 				$singular,
 				date_i18n(
-					__( 'M j, Y @ G:i' ),
+					__( 'M j, Y @ G:i', 'edwiser-bridge' ),
 					strtotime( $post->post_date )
 				),
 				esc_url(
