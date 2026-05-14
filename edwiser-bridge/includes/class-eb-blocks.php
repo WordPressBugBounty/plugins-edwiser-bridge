@@ -18,6 +18,9 @@ class EdwiserBridge_Blocks
         add_filter('block_categories_all', array($this, 'eb_register_edwiser_category'));
         add_action('wp_after_insert_post', array($this, 'handle_block_setting_change'), 10, 3);
 
+        // Load block styles in the Gutenberg editor (wp_enqueue_scripts doesn't fire in admin)
+        add_action('enqueue_block_editor_assets', array($this, 'eb_enqueue_editor_block_styles'));
+
         // AJAX handlers for order details
         add_action('wp_ajax_eb_get_order_details', array($this, 'eb_get_order_details'));
     }
@@ -129,12 +132,10 @@ class EdwiserBridge_Blocks
     public function eb_prevent_block_style_auto_enqueue($settings, $metadata)
     {
         // Only affect EB blocks
-        if (isset($metadata['name']) && strpos($metadata['name'], 'edwiser-bridge') !== false) {
-            // Remove style from auto-enqueue - we'll load conditionally
-            if (isset($settings['style'])) {
-                unset($settings['style']);
-            }
-            // Remove viewScript from auto-enqueue - we'll load conditionally
+        if (isset($metadata['name']) && strpos($metadata['name'], 'edwiser-bridge/') !== false) {
+            // Remove only the raw viewScript key so WordPress still uses view_script_handles
+            // to auto-enqueue view.js when do_blocks() renders the block (e.g. on course pages
+            // where $post->post_content is empty and has_eb_blocks() cannot detect the block).
             if (isset($settings['viewScript'])) {
                 unset($settings['viewScript']);
             }
@@ -180,12 +181,12 @@ class EdwiserBridge_Blocks
                     }
                 }
             }
-            
+
             // Enqueue styles for found blocks
             foreach (array_unique($found_blocks) as $block_name) {
                 $this->enqueue_block_styles($block_name);
             }
-            
+
             return !empty($found_blocks);
         }
         return false;
@@ -235,7 +236,7 @@ class EdwiserBridge_Blocks
 
         if (isset($block_assets[$block_name])) {
             $assets = $block_assets[$block_name];
-            
+
             // Enqueue style
             if (isset($assets['style'])) {
                 $style_path = plugin_dir_path(__DIR__) . $assets['style'];
@@ -248,19 +249,35 @@ class EdwiserBridge_Blocks
                     );
                 }
             }
-            
-            // Enqueue viewScript (moved to footer for performance)
-            if (isset($assets['viewScript'])) {
-                $script_path = plugin_dir_path(__DIR__) . $assets['viewScript'];
-                if (file_exists($script_path)) {
-                    wp_enqueue_script(
-                        'eb-block-' . str_replace('/', '-', $block_name) . '-view',
-                        plugins_url($assets['viewScript'], __DIR__),
-                        array(),
-                        filemtime($script_path),
-                        true
-                    );
-                }
+        }
+    }
+
+    /**
+     * Load block styles in the Gutenberg editor context.
+     * wp_enqueue_scripts does not fire in admin, so styles must be enqueued separately.
+     */
+    public function eb_enqueue_editor_block_styles()
+    {
+        $blocks = array(
+            'courses',
+            'my-courses',
+            'user-account',
+            'user-account-v2',
+            'dashboard',
+            'orders',
+            'profile',
+            'course-description',
+        );
+
+        foreach ($blocks as $block) {
+            $style_path = plugin_dir_path(__DIR__) . "blocks/build/{$block}/style-index.css";
+            if (file_exists($style_path)) {
+                wp_enqueue_style(
+                    'eb-block-editor-' . $block,
+                    plugins_url("/blocks/build/{$block}/style-index.css", __DIR__),
+                    array(),
+                    filemtime($style_path)
+                );
             }
         }
     }

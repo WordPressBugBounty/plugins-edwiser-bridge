@@ -455,7 +455,7 @@ if ( ! function_exists( 'wdm_eb_get_wp_course_id_from_moodle_course_id' ) ) {
 	 */
 	function wdm_eb_get_wp_course_id_from_moodle_course_id( $mdl_course_id ) {
 		global $wpdb;
-		$result = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_value=%d AND meta_key = 'moodle_course_id'", $mdl_course_id ) ); // @codingStandardsIgnoreLine
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM {$wpdb->prefix}postmeta WHERE meta_value=%d AND meta_key = 'moodle_course_id' ORDER BY post_id DESC LIMIT 1", $mdl_course_id ) ); // @codingStandardsIgnoreLine
 		return $result;
 	}
 }
@@ -979,7 +979,10 @@ if ( ! function_exists( 'wdm_eb_get_my_course_url' ) ) {
 	 * @return array returns course URL.
 	 */
 	function wdm_eb_get_my_course_url( $moodle_user_id, $mdl_course_id ) {
-		if ( '' !== $moodle_user_id && function_exists( 'app\wisdmlabs\edwiserBridgePro\includes\sso\generateMoodleUrl' ) ) {
+		$modules_data = get_option( 'eb_pro_modules_data', array() );
+		$sso_active   = isset( $modules_data['sso'] ) && 'active' === $modules_data['sso'];
+
+		if ( '' !== $moodle_user_id && $sso_active && function_exists( 'app\wisdmlabs\edwiserBridgePro\includes\sso\generateMoodleUrl' ) ) {
 			$query      = array(
 				'moodle_user_id'   => $moodle_user_id, // moodle user id.
 				'moodle_course_id' => $mdl_course_id,

@@ -19,7 +19,7 @@ class EdwiserBridge_Blocks_UserAccount_API
     public function __construct()
     {
         add_action('rest_api_init', array($this, 'eb_register_useraccount_routes'));
-        add_filter('rest_authentication_errors', array($this, 'eb_rest_authentication_errors'), 10, 1);
+        add_filter('rest_authentication_errors', array($this, 'eb_rest_authentication_errors'), 1, 1);
     }
 
     /**
@@ -581,7 +581,13 @@ class EdwiserBridge_Blocks_UserAccount_API
 
         // Get redirect parameters
         $redirect_to = isset($params['redirect_to']) ? sanitize_text_field($params['redirect_to']) : '';
+        $is_enroll   = isset($params['is_enroll']) && $params['is_enroll'] === 'true';
         $ignore_setting = !empty($redirect_to) ? 1 : 0;
+
+        // Preserve auto_enroll through Moodle SSO redirect
+        if (!empty($redirect_to) && $is_enroll) {
+            $redirect_to = add_query_arg('auto_enroll', 'true', $redirect_to);
+        }
 
         // Check if Edwiser Bridge Pro plugin is active and SSO is enabled
         $pro_plugin_active = $this->is_edwiser_bridge_pro_active();

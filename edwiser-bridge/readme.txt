@@ -2,8 +2,8 @@
 Contributors: WisdmLabs
 Tags: moodle wordpress integration, moodle wordpress integration, wordpress moodle plugin, lms integration, sell moodle courses
 Requires at least: 6.0
-Tested up to: 6.9.1
-Stable tag: 4.3.3
+Tested up to: 6.9.4
+Stable tag: 4.3.4
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -241,6 +241,16 @@ Also, check our knowledge base for more queries
 
 ==  Changelog  ==
 
+= 4.3.4 =
+* Fix - Added compatibility with Moodle 5.2.
+* Fix - Updated jQuery DataTables library to v1.13.11 to resolve multiple security vulnerabilities (CVE-2015-6584, CVE-2020-28458, CVE-2021-23445).
+* Fix - Resolved PHP fatal errors in eb_user_authentication_check() and the user profile edit page by improving parameter handling and adding proper try-catch error management.
+* Fix - Fixed duplicate credential emails for Moodle-synced users and corrected hsl() CSS functions to hsla() for consistent browser rendering.
+* Fix - Improved REST authentication priority and migrated to wp.apiFetch to resolve login loops, especially for WordPress subdirectory installations.
+* Fix - Fixed auto-enrollment not triggering after login for free courses when Moodle SSO is active. auto_enroll=true is now preserved through the SSO redirect flow.
+* Fix - Added a null check on the Take this Course button in eb-public.js to prevent JavaScript errors when the course CTA is not yet rendered.
+* Fix - Fixed My Courses "Start" button generating an incorrect SSO-style URL (?mdl_course_id=X) when SSO is disabled. wdm_eb_get_my_course_url() now validates whether the SSO module is active before calling generateMoodleUrl().
+
 = 4.3.3 =
 * Fix - Removed script tag from allowed HTML tags in wp_kses to prevent stored XSS on public-facing course pages.
 * Fix - Added nonce verification and capability checks to create_dummy_user() and enroll_dummy_user() AJAX handlers.
@@ -280,7 +290,7 @@ Also, check our knowledge base for more queries
 
 = 4.2.0 =
 * Feature - Added setting to select Edwiser Gutenberg block template pages.
-		  - We’ve introduced a new Template Selection feature in the Edwiser Bridge settings, allowing you to choose which WordPress pages use Gutenberg blocks for the particular pages.
+		  - We've introduced a new Template Selection feature in the Edwiser Bridge settings, allowing you to choose which WordPress pages use Gutenberg blocks for the particular pages.
 * Fix 	  - Resolved image synchronization issues when the server has allow_url_fopen disabled.
 
 = 4.1.0 =
