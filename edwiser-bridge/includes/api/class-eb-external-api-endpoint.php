@@ -19,6 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Eb_External_Api_Endpoint {
 
 	/**
+	 * Moodle user id of the account currently being created from an inbound
+	 * Moodle sync request, if any. Used by stamp_moodle_user_id() to link the
+	 * new WordPress user to Moodle before any other 'user_register' callback
+	 * runs, so the account is never pushed back to Moodle.
+	 *
+	 * @var int|null
+	 */
+	private $pending_moodle_user_id = null;
+
+	/**
 	 * This method registers the webservice endpointr.
 	 */
 	public function api_registration() {
@@ -162,7 +172,10 @@ class Eb_External_Api_Endpoint {
 					} else {
 						$wp_user_id = $this->create_only_wp_user( $data['user_name'], $data['email'], $data['first_name'], $data['last_name'], $role );
 					}
-					update_user_meta( $wp_user_id, 'moodle_user_id', $mdl_user_id );
+
+					if ( $wp_user_id && ! is_wp_error( $wp_user_id ) ) {
+						update_user_meta( $wp_user_id, 'moodle_user_id', $mdl_user_id );
+					}
 				}
 
 				if ( $wp_user_id ) {
@@ -233,13 +246,58 @@ class Eb_External_Api_Endpoint {
 			// that would not work for Moodle login, causing user confusion.
 			$moodle_sent_notification = ! empty( $data['moodle_generated_password'] );
 
-			$wp_user_id = $this->create_only_wp_user( $data['user_name'], $data['email'], $data['first_name'], $data['last_name'], $role, $user_p, $moodle_sent_notification );
-			if ( $wp_user_id ) {
-				update_user_meta( $wp_user_id, 'moodle_user_id', $data['user_id'] );
-
-				// user creation hook.
-				do_action( 'eb_user_created_from_moodle', $wp_user_id, $data );
+			// Guard: if this Moodle ID is already linked to a WP user, reuse that
+			// account instead of creating a second user with the same Moodle ID.
+			$existing_wp_user_id = 0;
+			if ( ! empty( $data['user_id'] ) ) {
+				$existing_wp_user_id = \app\wisdmlabs\edwiserBridge\wdm_eb_get_wp_user_id_from_moodle_id( $data['user_id'] );
 			}
+
+			if ( $existing_wp_user_id ) {
+				// Already linked - do not create a duplicate mapping.
+				$wp_user_id = (int) $existing_wp_user_id;
+				do_action( 'eb_user_creation_skipped_already_linked', $wp_user_id, $data );
+			} else {
+				// Stamp the Moodle user id onto the account as soon as it's created —
+				// specifically, before Eb_User_Manager::eb_moodle_user_register() (hooked
+				// on 'user_register' at priority 10) gets a chance to run. That handler
+				// pushes newly-registered users back to Moodle unless it sees an existing
+				// moodle_user_id, so without this the inbound Moodle sync re-enters
+				// Moodle's own webservice layer for every user it creates, which can hang
+				// or create a duplicate account. Priority 1 guarantees this runs first.
+				$this->pending_moodle_user_id = $data['user_id'];
+				add_action( 'user_register', array( $this, 'stamp_moodle_user_id' ), 1, 1 );
+
+				$wp_user_id = $this->create_only_wp_user( $data['user_name'], $data['email'], $data['first_name'], $data['last_name'], $role, $user_p, $moodle_sent_notification );
+
+				remove_action( 'user_register', array( $this, 'stamp_moodle_user_id' ), 1 );
+				$this->pending_moodle_user_id = null;
+
+				if ( $wp_user_id && ! is_wp_error( $wp_user_id ) ) {
+					// Belt-and-braces: keeps the link correct even if create_only_wp_user()
+					// ever rejects the account before wp_insert_user() runs (e.g. duplicate
+					// email), in which case stamp_moodle_user_id() never fired.
+					update_user_meta( $wp_user_id, 'moodle_user_id', $data['user_id'] );
+
+					// user creation hook.
+					do_action( 'eb_user_created_from_moodle', $wp_user_id, $data );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Runs on 'user_register' at priority 1, ahead of
+	 * Eb_User_Manager::eb_moodle_user_register() (priority 10), while a
+	 * WordPress user is being created from an inbound Moodle sync request.
+	 * Links the new account to Moodle immediately so that handler sees the
+	 * link already exists and skips pushing the account back to Moodle.
+	 *
+	 * @param int $user_id Newly created WordPress user id.
+	 */
+	public function stamp_moodle_user_id( $user_id ) {
+		if ( null !== $this->pending_moodle_user_id ) {
+			update_user_meta( $user_id, 'moodle_user_id', $this->pending_moodle_user_id );
 		}
 	}
 
